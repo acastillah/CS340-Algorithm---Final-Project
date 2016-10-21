@@ -42,4 +42,19 @@ def get_possible_students():
                 possible_students[class_preference] = [student_id]
     return possible_students
 
-print get_possible_students()
+# returns a list of most popular classes
+def get_popular_classes():
+    possible_students = get_possible_students()
+    popular_classes = []
+
+    # Since dictionaries can't be sorted, create a list of
+    # tuples (class, number of students interested)
+    for course, student_list in possible_students.iteritems():
+        popular_classes.append((course, len(student_list)))
+
+    # Now sort in descending order
+    popular_classes = sorted(popular_classes, key=lambda x: x[1], reverse=True)
+
+    return popular_classes
+
+print get_popular_classes()
