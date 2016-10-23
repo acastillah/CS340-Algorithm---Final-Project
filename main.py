@@ -1,5 +1,7 @@
+#from generate_data_structures import *
+from algorithm import *
+import subprocess
 import argparse
-from generate_data_structures import *
 
 parser = argparse.ArgumentParser(description="Test your algortihm for the registrar's problem!")
 parser.add_argument('constraints_txt')
@@ -24,7 +26,17 @@ student_preferences = extract_info(args.students_txt)
 constraints = extract_info(args.constraints_txt)
 
 # ADTs = generate(student_preferences, constraints) # this generates all data structures
-# schedule = registrars(ADTs)                       # returns the schedule which we will write 
+schedule = registrars(ADTs)                       # returns the schedule which we will write 
 
+def write_info(schedule):
+    with open('test.txt', 'w') as finalized:
+        finalized.write('Course\tRoom\tTeacher\tTime\tStudents')
+        for course_info in schedule:
+            for column in course_info:
+                finalized.write(column)
+                finalized.write('\t')
+            finalized.write('\n')
 
+write_info(schedule)
 
+subprocess.call(['perl', 'is_valid.pl', args.constraints_txt, args.students_txt, "../"+args.schedule_txt], cwd='basic_project_files')
