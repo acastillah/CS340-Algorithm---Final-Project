@@ -9,10 +9,11 @@ def registrars(ds):
         course = ds["PopularClasses"].pop(0).id # Most popular class
         classroomSize = ds["ClassroomSize"][classroom]
         studentsInClass = []
+        ds["StudentsInTimeslot"][timeslot] = set()
         while classroomSize > 0 and ds["PossibleStudents"][course]:
             student = ds["PossibleStudents"][course].pop()
             studentsInClass.append(student)
-            ds["StudentsInTimeslot"][timeslot] = set([student])
+            ds["StudentsInTimeslot"][timeslot].add(student)
             classroomSize -= 1
         teacher = ds["ClassTeacher"][course]
         schedule.append((course, classroom, teacher, timeslot, studentsInClass))
@@ -69,7 +70,7 @@ PopularClass = namedtuple('PopularClass', 'id')
 
 ds = {
     "Timeslots": {1, 2},
-    "PopularClasses": [PopularClass(id="1"),PopularClass(id="2"),PopularClass(id="3"),PopularClass(id="4")],
+    "PopularClasses": [PopularClass(id="3"),PopularClass(id="2"),PopularClass(id="1"),PopularClass(id="4")],
 }
 
 ds["PossibleClassrooms"] = {1: [("3",8),("1",6),("2",5)], 2: [("3",8),("1",6),("2",5)]}
