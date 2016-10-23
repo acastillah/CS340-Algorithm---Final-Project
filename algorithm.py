@@ -2,6 +2,7 @@ from collections import namedtuple
 
 def registrars(ds):
     ds["TeacherBusy"] = {}
+    ds["StudentsInTimeslot"] = {}
     schedule = []
     for timeslot in ds["Timeslots"]:
         classroom = ds["PossibleClassrooms"][timeslot].pop(0)[0] # largest classroom available at timeslot
@@ -11,7 +12,7 @@ def registrars(ds):
         while classroomSize > 0 and ds["PossibleStudents"][course]:
             student = ds["PossibleStudents"][course].pop()
             studentsInClass.append(student)
-            ds["StudentsInTimeslot"][timeslot].add(student)
+            ds["StudentsInTimeslot"][timeslot] = set([student])
             classroomSize -= 1
         teacher = ds["ClassTeacher"][course]
         schedule.append((course, classroom, teacher, timeslot, studentsInClass))
@@ -74,7 +75,6 @@ ds = {
 ds["PossibleClassrooms"] = {1: [("3",8),("1",6),("2",5)], 2: [("3",8),("1",6),("2",5)]}
 ds["PossibleStudents"] = {"1": {"s1","s2","s3","s4"},"2": {"s1","s2","s4","s5","s6"},"3": {"s1","s3","s5","s6","s7"},"4": {"s2","s5","s6","s7"}}
 ds["ClassTeacher"] = {"1": "Jane","2": "Jane","3": "Alex","4": "Connor"}
-ds["StudentsInTimeslot"] = {1: set(),2:set()}
 ds["ClassroomSize"] = {"1": 6, "2": 5, "3": 8}
 
 print registrars(ds)
