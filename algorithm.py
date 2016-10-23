@@ -2,11 +2,14 @@ def registrars(ds):
     for timeslot in ds["Timeslots"]:
         classroom = ds["PossibleClassrooms"][timeslot].pop() # largest classroom available at timeslot
         course = ds["PopularClasses"].pop() # Most popular class
-        ds["Schedule"][timeslot][classroom] = {course: {}} 
-        while ds["ClassroomSize"][classroom] > 0 or ds["PossibleStudents"][course] != set(): #where do we update classroom size????
+        ds["Schedule"][timeslot][classroom] = {course: {}}
+        #changed the way we use classroom size to go through the loop because the way you had it before you never updated it
+        classroomSize = ds["ClassroomSize"][classroom] 
+        while classroomSize > 0 or ds["PossibleStudents"][course] != set():
             student = ds["PossibleStudents"][course].pop()
             ds["Schedule"][timeslot][classroom][course].add(student)
             ds["StudentsInTimeslot"][timeslot].add(student)
+            classroomSize -= 1
         teacher = ds["ClassTeacher"][course]
         ds["TeacherBusy"][teacher].add(timeslot)
 
@@ -32,7 +35,8 @@ def registrars(ds):
             break
         classroom = ds["PossibleClassrooms"][optimalTimeslot].pop() # largest classroom available at timeslot
         if classroom == None:
-            ds["PossibleClassrooms"][timeslot].remove() #not sure if this is the right way to do it
+            #ds["PossibleClassrooms"][timeslot].remove() #not sure which of these is the right way to do it
+            ds["PossibleClassrooms"].remove(timeslot)
         classroomSize = ds["ClassroomSize"][classroom]
         while classroomSize > 0 or ds["PossibleStudents"][course] != set():
             student = ds["PossibleStudents"][course].pop()
