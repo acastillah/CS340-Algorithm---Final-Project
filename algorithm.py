@@ -66,17 +66,3 @@ def registrars(ds):
             ds["TeacherBusy"][teacher] = set([timeslot])  
     return schedule
 
-PopularClass = namedtuple('PopularClass', 'id')
-
-ds = {
-    "Timeslots": {1, 2},
-    "PopularClasses": [PopularClass(id="3"),PopularClass(id="2"),PopularClass(id="1"),PopularClass(id="4")],
-}
-
-ds["PossibleClassrooms"] = {1: [("3",8),("1",6),("2",5)], 2: [("3",8),("1",6),("2",5)]}
-ds["PossibleStudents"] = {"1": {"s1","s2","s3","s4"},"2": {"s1","s2","s4","s5","s6"},"3": {"s1","s3","s5","s6","s7"},"4": {"s2","s5","s6","s7"}}
-ds["ClassTeacher"] = {"1": "Jane","2": "Jane","3": "Alex","4": "Connor"}
-ds["ClassroomSize"] = {"1": 6, "2": 5, "3": 8}
-
-print registrars(ds)
-
