@@ -10,6 +10,12 @@ parser.add_argument('schedule_txt')
 
 args = parser.parse_args()
 
+room_num = str(input("Enter the number of rooms: "))
+class_num = str(input("Enter the number of classes: "))
+times_num = str(input("Enter the number of timeslots: "))
+students_num = str(input("Enter the number of students: "))
+
+subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, args.constraints_txt, args.students_txt], cwd='basic_project_files')
 
 # return a list of lists
 def extract_info(txt):
@@ -26,10 +32,10 @@ student_preferences = extract_info(args.students_txt)
 constraints = extract_info(args.constraints_txt)
 
 # ADTs = generate(student_preferences, constraints) # this generates all data structures
-schedule = registrars(ADTs)                       # returns the schedule which we will write 
+# schedule = registrars(ADTs)                       # returns the schedule which we will write 
 
 def write_info(schedule):
-    with open('test.txt', 'w') as finalized:
+    with open(args.schedule_txt, 'w') as finalized:
         finalized.write('Course\tRoom\tTeacher\tTime\tStudents')
         for course_info in schedule:
             for column in course_info:
