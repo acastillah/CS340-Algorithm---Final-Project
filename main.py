@@ -1,4 +1,4 @@
-#from generate_data_structures import *
+from generate_data_structures import *
 from algorithm import *
 import subprocess
 import argparse
@@ -9,6 +9,9 @@ parser.add_argument('students_txt')
 parser.add_argument('schedule_txt')
 
 args = parser.parse_args()
+
+open(args.constraints_txt, 'w').close()
+open(args.students_txt, 'w').close()
 
 room_num = str(input("Enter the number of rooms: "))
 class_num = str(input("Enter the number of classes: "))
@@ -32,15 +35,24 @@ student_preferences = extract_info(args.students_txt)
 constraints = extract_info(args.constraints_txt)
 
 ADTs = generate(student_preferences, constraints) # this generates all data structures
+<<<<<<< HEAD
 schedule = registrars(ADTs)                       # returns the schedule which we will write
+=======
+schedule = registrars(ADTs)                       # returns the schedule which we will write 
+print schedule
+>>>>>>> ea3ef58397abeb373f5d0af59ca400dc8ccbd22e
 
 def write_info(schedule):
     with open(args.schedule_txt, 'w') as finalized:
-        finalized.write('Course\tRoom\tTeacher\tTime\tStudents')
+        finalized.write('Course\tRoom\tTeacher\tTime\tStudents\n')
         for course_info in schedule:
             for column in course_info:
-                finalized.write(column)
-                finalized.write('\t')
+                if column == course_info[-1]:
+                    for student in column:
+                        finalized.write(student+" ")
+                else:
+                    finalized.write(str(column))
+                    finalized.write('\t')
             finalized.write('\n')
 
 write_info(schedule)
