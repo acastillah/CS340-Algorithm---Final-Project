@@ -31,8 +31,8 @@ def extract_info(txt):
 student_preferences = extract_info(args.students_txt)
 constraints = extract_info(args.constraints_txt)
 
-# ADTs = generate(student_preferences, constraints) # this generates all data structures
-# schedule = registrars(ADTs)                       # returns the schedule which we will write 
+ADTs = generate(student_preferences, constraints) # this generates all data structures
+schedule = registrars(ADTs)                       # returns the schedule which we will write
 
 def write_info(schedule):
     with open(args.schedule_txt, 'w') as finalized:
