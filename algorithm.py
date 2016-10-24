@@ -59,11 +59,11 @@ def registrars(ds):
             ds["StudentsInTimeslot"][optimalTimeslot].add(student)
             classroomSize -= 1
         teacher = ds["ClassTeacher"][course]
-        schedule.append((course, classroom, teacher, timeslot, studentsInClass))
+        schedule.append((course, classroom, teacher, optimalTimeslot, studentsInClass))
         if teacher in ds["TeacherBusy"]:
-            ds["TeacherBusy"][teacher].add(timeslot)
+            ds["TeacherBusy"][teacher].add(optimalTimeslot)
         else:
-            ds["TeacherBusy"][teacher] = set([timeslot])
+            ds["TeacherBusy"][teacher] = set([optimalTimeslot])
     return schedule
 
 # PopularClass = namedtuple('PopularClass', 'id')
