@@ -18,11 +18,11 @@ class_num = str(input("Enter the number of classes: "))
 times_num = str(input("Enter the number of timeslots: "))
 students_num = str(input("Enter the number of students: "))
 
-subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, args.constraints_txt, args.students_txt], cwd='basic_project_files')
+subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, args.constraints_txt, args.students_txt])
 
 # return a list of lists
 def extract_info(txt):
-    text = iter(open('basic_project_files/'+txt, 'r'))
+    text = iter(open(txt, 'r'))
     next(text) # Skip the first line
     results = []
     for line in text:
@@ -36,7 +36,6 @@ constraints = extract_info(args.constraints_txt)
 
 ADTs = generate(student_preferences, constraints) # this generates all data structures
 schedule = registrars(ADTs)                       # returns the schedule which we will write 
-print schedule
 
 def write_info(schedule):
     with open(args.schedule_txt, 'w') as finalized:
@@ -53,4 +52,4 @@ def write_info(schedule):
 
 write_info(schedule)
 
-subprocess.call(['perl', 'is_valid.pl', args.constraints_txt, args.students_txt, "../"+args.schedule_txt], cwd='basic_project_files')
+subprocess.call(['perl', 'is_valid.pl', args.constraints_txt, args.students_txt, args.schedule_txt])
