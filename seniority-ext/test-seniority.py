@@ -1,3 +1,7 @@
+from collections import namedtuple
+PopularClass = namedtuple('PopularClass', 'id students size')
+Student = namedtuple('Student', 'id year major')
+
 import argparse
 
 parser = argparse.ArgumentParser(description="Test your algortihm for the registrar's problem!")
@@ -44,5 +48,22 @@ def generate_class_course(constraints):
 		result[course[0]] = course[1]
 		
     return result
+    
+# returns a dictionary {Class: { set of student_objects that want to take Class }}
+def get_possible_students(student_preference_list):
+    possible_students = {}
+    for student in student_preference_list:
+        student_object = Student(id=student[0], year=student[1], major=student[2])
+        student = iter(student)
+        next(student) # skip student ID
+        next(student) # skip student year
+        next(student) # skip student major
+        for class_preference in student:
+            if class_preference in possible_students:
+                possible_students[class_preference].add(student_object)
+            else:
+                possible_students[class_preference] = set([student_object])
+    return possible_students
 
-print generate_class_course(constraints)
+# print generate_class_course(constraints)
+print get_possible_students(student_preferences)
