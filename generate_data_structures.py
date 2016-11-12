@@ -1,9 +1,9 @@
 from collections import namedtuple
 PopularClass = namedtuple('PopularClass', 'id students size')
 
+
 # returns a dictionary {Class: { set of students that want to take Class }}
 def get_possible_students(student_preference_list):
-    student_preference_list = student_preference_list
     possible_students = {}
     for student in student_preference_list:
         student_id = student[0]
