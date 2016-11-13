@@ -2,13 +2,15 @@ from collections import namedtuple
 
 #extensions: major/minor and class year priority, multiple sections, tri-co bus schedule, classrooms by location, diversity, overlapping timeslots
 
-def fill_classroom(teacher, course, classroomSize, availableStudents, timeslot, ds, schedule):
+def fill_classroom(teacher, course, classroomSize, timeslot, ds, schedule):
     studentsInClass = []
+    availableStudents = ds["PossibleStudents"][course] - ds["StudentsInTimeslot"][timeslot]
     while classroomSize > 0 and availableStudents:
         student = availableStudents.pop()
         studentsInClass.append(student)
         ds["StudentsInTimeslot"][timeslot].add(student)
         classroomSize -= 1
+    ds["PossibleStudents"][course] = availableStudents | ds["StudentsInTimeslot"][timeslot]
     if teacher in ds["TeacherBusy"]:
         ds["TeacherBusy"][teacher].add(timeslot)
     else:
@@ -23,8 +25,7 @@ def get_optimal_ts(timeslotsTeacherFree, ds, course):
     for timeslot in timeslotsTeacherFree:
         classroom = ds["PossibleClassrooms"][timeslot][0][0] #classroom id
         numOfAvailableStudents = len(ds["PossibleStudents"][course] - ds["StudentsInTimeslot"][timeslot])
-        classroomSize = 15
-        #classroomSize = ds["ClassroomSize"][classroom]
+        classroomSize = ds["ClassroomSize"][classroom]
         if classroomSize > numOfAvailableStudents:
             metric = numOfAvailableStudents
         else:
@@ -53,7 +54,7 @@ def initialize_schedule(ds, func_fill_classroom):
         studentsInClass = []
         ds["StudentsInTimeslot"][timeslot] = set()
         teacher = ds["ClassTeacher"][course]
-        pair = func_fill_classroom(teacher, course, classroomSize, ds["PossibleStudents"][course], timeslot, ds, schedule)
+        pair = func_fill_classroom(teacher, course, classroomSize, timeslot, ds, schedule)
         ds = pair[1]
         studentsInClass = pair[0]
         schedule.append((course, classroom, teacher, timeslot, studentsInClass))
@@ -76,12 +77,11 @@ def assign_class(ds, func_fill_classroom, schedule, course, section):
     if not ds["PossibleClassrooms"][optimalTimeslot]:
         ds["PossibleClassrooms"].pop(optimalTimeslot)
     classroomSize = ds["ClassroomSize"][classroom]
-    availableStudents = ds["PossibleStudents"][course] - ds["StudentsInTimeslot"][optimalTimeslot]
-    pair = func_fill_classroom(teacher, course, 10, availableStudents, optimalTimeslot, ds, schedule)
-    ds = pair[1]
-    studentsInClass = pair[0]
+    pair = func_fill_classroom(teacher, course, 10, optimalTimeslot, ds, schedule)
     if section:
         course += ".1"
+    ds = pair[1]
+    studentsInClass = pair[0]
     schedule.append((course, classroom, teacher, optimalTimeslot, studentsInClass))
     return (ds,schedule)
 
@@ -98,6 +98,8 @@ def registrars(ds):
     ds = initialize[1]
     schedule = fill_schedule(ds, schedule, fill_classroom)
     return schedule
+
+
 
 # PopularClass = namedtuple('PopularClass', 'id')
 #
