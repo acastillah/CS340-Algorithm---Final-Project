@@ -3,7 +3,7 @@ use strict;
 
 if (!$ARGV[0] || !$ARGV[1] || !$ARGV[2]) {
 
-	print "$0 takes a schedule and checks that it's valid based on the constraints of the problem.\n";
+	print "$0 takes a schedule and checks that it's valid based on the constraints of the problem.\n"; 
 	print "Usage:\n";
 	print "$0: <constraints file> <prefs file> <schedule file>\n";
 	exit 1;
@@ -51,7 +51,7 @@ while (<SCHED>) {
 			print "Header line has incorrect format.\n";
 			print "Line:$_\n";
 			exit 1;
-		}
+		} 
 	} else {
 		if (!/^(\d+)\t(.+)\t(\d+)\t(\d+)\t(.*)$/) {
 			print "Content line has incorrect format.\n";
@@ -127,21 +127,21 @@ while (<SCHED>) {
 
 					} else {
 						my @temp = ($course);
-						$studentCourses{$stu} = \@temp;
+						$studentCourses{$stu} = \@temp; 
 					}
 
 					if (!inArray($course, \@{$origStudentPrefs{$stu}})) {
 						print "Student $stu assigned to unrequested course $course.\n";
 						print "Line:$_\n";
 						exit 1;
-
-
-					}
+					
+					
+					} 
 				$stuprefs++;
 				}
 			}
 		}
-
+	
 	}
 
 	$lineno++;

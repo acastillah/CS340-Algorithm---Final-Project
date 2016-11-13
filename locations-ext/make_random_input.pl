@@ -2,7 +2,7 @@
 use strict;
 use POSIX;
 
-my $maxroomcapacity = 1000;
+my $maxroomcapacity = 40;
 my $minroomcapacity = 10;
 
 if (!$ARGV[0] || !$ARGV[1] || !$ARGV[2] || !$ARGV[3] || !$ARGV[4] || !$ARGV[5]) {
@@ -65,7 +65,7 @@ print CONSTRAINT "Class Times\t$numslots\n";
 print CONSTRAINT "Rooms\t$numrooms\n";
 foreach my $room ((1..$numrooms)) {
 	my $newval = rand();  # gives a random value between 0 and 1
-	my $roomcap = floor($newval * ($maxroomcapacity - $minroomcapacity) + $minroomcapacity);  # room capacity between 10 and 100
+	my $roomcap = floor($newval * ($maxroomcapacity - $minroomcapacity) + $minroomcapacity);  # room capacity between 10 and 1000
 	print CONSTRAINT "$room\t$roomcap\n";
 }
 
