@@ -18,16 +18,10 @@ schedule_txt = args.schedule
 
 student_preferences = extract_info(students_txt)
 constraints = extract_info_constraints(constraints_txt)
-print constraints
 
 ADTs = generate(student_preferences, constraints) # this generates all data structures
 schedule = registrars(ADTs)                       # returns the schedule which we will write
 
 write_info(schedule, schedule_txt)
 
-
-subprocess.call(['perl', 'cs340_project/sections-ext/is_valid.pl', constraints_txt, students_txt, schedule_txt])
-out = subprocess.check_output(['perl', 'cs340_project/sections-ext/is_valid.pl', constraints_txt, students_txt, schedule_txt])
-
-score = re.search('\d+', out)
-print score
+subprocess.call(['perl', 'cs340_project/locations-ext/is_valid.pl', constraints_txt, students_txt, schedule_txt])

@@ -74,8 +74,9 @@ def generate_building_major(constraints):
     for line in constraints:
         if line[0] == 'Buildings':
             begin_point = constraints.index(line) + 1 # This is the part of text that marks the beginning of the list of buildings
-            break
-    for line in constraints[begin_point:]:
+        elif line[0] == 'Class':
+            end_point = constraints.index(line)
+    for line in constraints[begin_point:end_point]:
         major_id = line[0]
         building_id = line[1]
         if building_id in results:
@@ -91,14 +92,15 @@ def init_class_teacher(constraints):
     for line in constraints:
         if line[0] == 'Teachers':
             begin_point = constraints.index(line) # This is the part of text that marks the beginning of the list of teachers and classes they teach
-        elif line[0] == 'Buildings':
-            end_point = constraints.index(line)
-    classes_teachers = constraints[begin_point:end_point] # List of list(class, teacher_id)
+    classes_teachers = constraints[begin_point:] # List of list(class, teacher_id)
     return dict(classes_teachers)
 
 # returns a set of timeslots
 def get_timeslots(constraints):
-    return set([x for x in range(1, int(constraints[0][2])+1)])
+    for line in constraints:
+        if line[0] == 'Class':
+            begin_point = constraints.index(line)
+    return set([x for x in range(1, int(constraints[begin_point][2])+1)])
 
 # return a dictionary {timeslot: list of classrooms}
 def get_possible_classrooms(constraints):

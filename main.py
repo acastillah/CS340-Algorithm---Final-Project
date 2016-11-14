@@ -50,13 +50,13 @@ if __name__ == '__main__':
         constraints_txt = "c.txt"
         students_txt = "s.txt"
         schedule_txt = "o.txt"
-        room_num = "200"
-        class_num = "300"
-        times_num = "10"
-        majors_num = "20"
+        room_num = "400"
+        class_num = "1000"
+        times_num = "12"
+        majors_num = "26"
         with open("results.txt", 'w') as results:
-            results.write("base,sections,students\n")
-            for i in range(20,50):
+            results.write("base,locations,sections,bico,students\n")
+            for i in range(40,70):
                 students_num = str(i**2)
                 open(constraints_txt, 'w').close()
                 open(students_txt, 'w').close()
@@ -70,13 +70,16 @@ if __name__ == '__main__':
                 out = subprocess.check_output(['perl', 'is_valid.pl', constraints_txt, students_txt, schedule_txt])
                 match = re.search("\d+", out)
                 base_score = str(match.group(0))
-        #        open("locations/"+constraints_txt, 'w').close()
-         #       open("locations/"+students_txt, 'w').close()
-          #      os.chdir("locations/")
-           #     subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt, majors_num])
-            #    os.chdir('../../')
-             #   subprocess.call(['python', '-m', ('cs340_project.locations.main'), 'cs340_project/locations/'+constraints_txt, 'cs340_project/locations/'+students_txt, 'cs340_project/locations/'+schedule_txt])
-             #   locations_score = subprocess.check_output(['python', '-m', ('cs340_project.locations.main'), 'cs340_project/locations/'+constraints_txt, 'cs340_project/locations/'+students_txt, 'cs340_project/locations/'+schedule_txt])
+                open("locations-ext/"+constraints_txt, 'w').close()
+                open("locations-ext/"+students_txt, 'w').close()
+                os.chdir("locations-ext/")
+                subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt, majors_num])
+                os.chdir('../../')
+                subprocess.call(['python', '-m', ('cs340_project.locations-ext.main'), 'cs340_project/locations-ext/'+constraints_txt, 'cs340_project/locations-ext/'+students_txt, 'cs340_project/locations-ext/'+schedule_txt])
+                out = subprocess.check_output(['python', '-m', ('cs340_project.locations-ext.main'), 'cs340_project/locations-ext/'+constraints_txt, 'cs340_project/locations-ext/'+students_txt, 'cs340_project/locations-ext/'+schedule_txt])
+                match = re.search("\d+", out)
+                locations_score = str(match.group(0))
+                os.chdir('cs340_project')
                 open("sections-ext/"+constraints_txt, 'w').close()
                 open("sections-ext/"+students_txt, 'w').close()
                 os.chdir("sections-ext/")
@@ -86,7 +89,17 @@ if __name__ == '__main__':
                 out = subprocess.check_output(['python', '-m', ('cs340_project.sections-ext.main'), 'cs340_project/sections-ext/'+constraints_txt, 'cs340_project/sections-ext/'+students_txt, 'cs340_project/sections-ext/'+schedule_txt])
                 match = re.search("\d+", out)
                 sections_score = str(match.group(0))
-                results.write(base_score+'\t'+sections_score+'\t'+students_num+'\n')
+                os.chdir('cs340_project')
+                open("bico-ext/"+constraints_txt, 'w').close()
+                open("bico-ext/"+students_txt, 'w').close()
+                os.chdir("bico-ext/")
+                subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt]) 
+                os.chdir('../../')
+                subprocess.call(['python', '-m', ('cs340_project.bico-ext.main'), 'cs340_project/bico-ext/'+constraints_txt, 'cs340_project/bico-ext/'+students_txt, 'cs340_project/bico-ext/'+schedule_txt])
+                out = subprocess.check_output(['python', '-m', ('cs340_project.bico-ext.main'), 'cs340_project/bico-ext/'+constraints_txt, 'cs340_project/bico-ext/'+students_txt, 'cs340_project/bico-ext/'+schedule_txt])
+                match = re.search("\d+", out)
+                bico_score = str(match.group(0))
+                results.write(base_score+'\t'+locations_score+'\t'+sections_score+'\t'+bico_score+'\t'+students_num+'\n')
                 os.chdir('cs340_project')
 
     else:
@@ -128,6 +141,8 @@ if __name__ == '__main__':
         elif args.mode == "sections":
             subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt]) 
 
+        elif args.mode == "bico":
+            subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt]) 
 
         if args.mode == "base":
             student_preferences = extract_info(students_txt)

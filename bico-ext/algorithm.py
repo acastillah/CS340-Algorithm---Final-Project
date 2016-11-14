@@ -7,7 +7,6 @@ def onCampus(student, timeslot, school, ds):
         if previous_ts in ds["CourseInTimeslot"][student]:
             previous_course = ds["CourseInTimeslot"][student][previous_ts]
             if school != ds["SchoolOfCourse"][previous_course]:
-                print "Not on campus"
                 return False
         if next_ts in ds["CourseInTimeslot"][student]:
             next_course = ds["CourseInTimeslot"][student][next_ts]
@@ -15,7 +14,7 @@ def onCampus(student, timeslot, school, ds):
                 return False
     return True
 
-def bico_fill_classroom(teacher, course, classroomSize, timeslot, ds, schedule):
+def bico_fill_classroom(teacher, course, classroomSize, timeslot, ds, schedule, func_optimal_ts):
     studentsInClass = []
     availableStudents = ds["PossibleStudents"][course] - ds["StudentsInTimeslot"][timeslot]
     school = ds["SchoolOfCourse"][course]
@@ -60,7 +59,7 @@ def get_optimal_bico_ts(timeslotsTeacherFree, ds, course):
     return (optimalMetric, optimalTimeslot)
 
 def registrars(ds):
-    initialize = initialize_schedule(ds, bico_fill_classroom)
+    initialize = initialize_schedule(ds, bico_fill_classroom, get_optimal_bico_ts)
     schedule = initialize[0]
     ds = initialize[1]
     schedule = fill_schedule(ds, schedule, bico_fill_classroom, get_optimal_bico_ts)

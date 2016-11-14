@@ -68,6 +68,21 @@ if ($numrooms * $maxroomcapacity * $numslots < 4 * $numstudents) {
 
 open (CONSTRAINT, ">> $constraintfile") || die "Can't open file: $constraintfile\n";
 
+print CONSTRAINT "Buildings\t$numbuildings\n";
+my %majorsin = ();
+foreach my $major ((1..$nummajors)) {
+	my $building = ceil(rand() * $numbuildings);
+	while (defined $majorsin{$building}  && $majorsin{$building}== 2) {
+		$building = ceil(rand() * $numbuildings);
+	}
+	print CONSTRAINT "$major\t$building\n";
+	if (!defined $majorsin{$building}) {
+		$majorsin{$building} = 1;
+	} else {
+		$majorsin{$building}++;
+	}
+}
+
 print CONSTRAINT "Class Times\t$numslots\n";
 print CONSTRAINT "Rooms\t$numrooms\n";
 foreach my $room ((1..$numrooms)) {
@@ -95,21 +110,6 @@ foreach my $class ((1..$numclasses)) {
 		$classestaught{$teacher} = 1;
 	} else {
 		$classestaught{$teacher}++;
-	}
-}
-
-print CONSTRAINT "Buildings\t$numbuildings\n";
-my %majorsin = ();
-foreach my $major ((1..$nummajors)) {
-	my $building = ceil(rand() * $numbuildings);
-	while (defined $majorsin{$building}  && $majorsin{$building}== 2) {
-		$building = ceil(rand() * $numbuildings);
-	}
-	print CONSTRAINT "$major\t$building\n";
-	if (!defined $majorsin{$building}) {
-		$majorsin{$building} = 1;
-	} else {
-		$majorsin{$building}++;
 	}
 }
 
