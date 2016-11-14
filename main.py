@@ -15,6 +15,15 @@ def extract_info(txt):
     text.close()
     return results
 
+def extract_info_constraints(txt):
+    text = iter(open(txt, 'r'))
+    results = []
+    for line in text:
+        line = line.strip()
+        results.append(line.split())
+    text.close()
+    return results
+
 def write_info(schedule, schedule_txt):
     with open(schedule_txt, 'w') as finalized:
         finalized.write('Course\tRoom\tTeacher\tTime\tStudents\n')
@@ -72,8 +81,8 @@ if __name__ == '__main__':
         majors_num = str(input("Enter the number of distinct majors: "))
         subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt, majors_num])
     elif args.mode == "locations":
-        building_num = str(input("Enter the number of buildings: "))
-        subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt, building_num])
+        majors_num = str(input("Enter the number of distinct majors: "))
+        subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt, majors_num])
     elif args.mode == "sections":
         subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt]) 
 

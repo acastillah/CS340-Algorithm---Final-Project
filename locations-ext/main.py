@@ -1,5 +1,5 @@
 
-from generate_data_structures_locations import *
+from generate_data_structures_location import *
 from ..main import *
 from algorithm import *
 import argparse
@@ -17,7 +17,8 @@ students_txt = args.students
 schedule_txt = args.schedule
 
 student_preferences = extract_info(students_txt)
-constraints = extract_info(constraints_txt)
+constraints = extract_info_constraints(constraints_txt)
+print constraints
 
 ADTs = generate(student_preferences, constraints) # this generates all data structures
 schedule = registrars(ADTs)                       # returns the schedule which we will write
