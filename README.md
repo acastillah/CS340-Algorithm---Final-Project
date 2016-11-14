@@ -3,7 +3,7 @@
 
 To use this codebase, simply clone and cd into the root of the repo and run the following in your shell.
 ```shell
-sh run.sh demo_constraints.txt demo_studentprefs.txt demo_schedule.txt
+sh run.sh -mode [base seniority locations trico sections diversity] 
 ```
 
-**Using:** Python 2.7
+

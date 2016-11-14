@@ -2,15 +2,15 @@
 use strict;
 use POSIX;
 
-my $maxroomcapacity = 1000;
+my $maxroomcapacity = 40;
 my $minroomcapacity = 10;
 
-if (!$ARGV[0] || !$ARGV[1] || !$ARGV[2] || !$ARGV[3] || !$ARGV[4] || !$ARGV[5] || !$ARGV[6] ) {
+if (!$ARGV[0] || !$ARGV[1] || !$ARGV[2] || !$ARGV[3] || !$ARGV[4] || !$ARGV[5]) {
 
 	print "$0 takes schedule bounds and randomly creates two files for input to a schedule maker.\n";
 	print "The first contains all the class-specific constrains, and the second the student class preferences.\n";
 	print "Usage:\n";
-	print "$0: <number of rooms> <number of classes> <number of class times> <number of students> <contraint file> <student prefs file> <number of majors>\n";
+	print "$0: <number of rooms> <number of classes> <number of class times> <number of students> <contraint file> <student prefs file>\n";
 	exit 1;
 }
 
@@ -18,19 +18,12 @@ if (!$ARGV[0] || !$ARGV[1] || !$ARGV[2] || !$ARGV[3] || !$ARGV[4] || !$ARGV[5] |
 my $numrooms = $ARGV[0];
 my $numclasses = $ARGV[1];
 my $numslots = $ARGV[2];
-my $nummajors = $ARGV[6];
 
 if ($numclasses % 2 != 0) {
 	print "The number of classes must be even, since we're assuming each teacher teaches 2 classes and there cannot be fractional teachers.\n";
 	exit 1;
 }
 
-if ($nummajors % 2 != 0) {
-	print "The number of majors must be even, since we're assuming each building has 2 majors and there cannot be fractional majors.\n";
-	exit 1;
-}
-
-my $numbuildings = $nummajors / 2;
 my $numstudents = $ARGV[3];
 my $numteachers = $numclasses / 2;
 my $constraintfile = $ARGV[4];
@@ -73,16 +66,10 @@ print CONSTRAINT "Rooms\t$numrooms\n";
 foreach my $room ((1..$numrooms)) {
 	my $newval = rand();  # gives a random value between 0 and 1
 	my $roomcap = floor($newval * ($maxroomcapacity - $minroomcapacity) + $minroomcapacity);  # room capacity between 10 and 100
-    my $building = ceil(rand() * $numbuildings);
-	print CONSTRAINT "$room\t$roomcap\t$building\n";
+	print CONSTRAINT "$room\t$roomcap\n";
 }
 
 print CONSTRAINT "Classes\t$numclasses\n";
-foreach my $class ((1..$numclasses)) {
-	my $major = ceil(rand() * $nummajors);
-	print CONSTRAINT "$class\t$major\n"
-}
-	
 print CONSTRAINT "Teachers\t$numteachers\n";
 my %classestaught = ();
 foreach my $class ((1..$numclasses)) {
@@ -95,21 +82,6 @@ foreach my $class ((1..$numclasses)) {
 		$classestaught{$teacher} = 1;
 	} else {
 		$classestaught{$teacher}++;
-	}
-}
-
-print CONSTRAINT "Buildings\t$numbuildings\n";
-my %majorsin = ();
-foreach my $major ((1..$nummajors)) {
-	my $building = ceil(rand() * $numbuildings);
-	while (defined $majorsin{$building}  && $majorsin{$building}== 2) {
-		$building = ceil(rand() * $numbuildings);
-	}
-	print CONSTRAINT "$major\t$building\n";
-	if (!defined $majorsin{$building}) {
-		$majorsin{$building} = 1;
-	} else {
-		$majorsin{$building}++;
 	}
 }
 
