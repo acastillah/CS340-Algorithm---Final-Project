@@ -3,7 +3,7 @@
 
 To use this codebase, simply clone and cd into the root of the repo and run the following in your shell.
 ```shell
-sh run.sh -mode [base seniority locations bico sections diversity] 
+sh run.sh -mode [base locations bico sections] 
 ```
 
 
