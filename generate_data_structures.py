@@ -1,6 +1,6 @@
 from collections import namedtuple
+import random
 PopularClass = namedtuple('PopularClass', 'id students size')
-
 
 # returns a dictionary {Class: { set of students that want to take Class }}
 def get_possible_students(student_preference_list):
@@ -89,6 +89,13 @@ def get_possible_classrooms(constraints):
 #         students_in_timeslot[timeslot] = [] # empty list of students
 #     return students_in_timeslot
 
+def get_school(constraints, student_preference_list):
+    school_of_course = {}
+    courses = get_popular_classes(student_preference_list)
+    for course in courses:
+        school_of_course[course.id] = random.choice([0, 1])
+    return school_of_course
+
 def generate(student_preference_list, constraints):
     ds = {}
     ds["Timeslots"] = get_timeslots(constraints)
@@ -97,4 +104,5 @@ def generate(student_preference_list, constraints):
     ds["PossibleStudents"] = get_possible_students(student_preference_list)
     ds["ClassTeacher"] = init_class_teacher(constraints)
     ds["ClassroomSize"] = get_classroom_sizes(constraints)
+    ds["SchoolOfCourse"] = get_school(constraints, student_preference_list)
     return ds
