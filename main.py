@@ -50,13 +50,13 @@ if __name__ == '__main__':
         constraints_txt = "c.txt"
         students_txt = "s.txt"
         schedule_txt = "o.txt"
-        room_num = "400"
-        class_num = "1000"
+        room_num = "1000"
+        class_num = "1200"
         times_num = "12"
         majors_num = "26"
         with open("results.txt", 'w') as results:
             results.write("base,locations,sections,bico,students\n")
-            for i in range(40,70):
+            for i in xrange(40,100, 5):
                 students_num = str(i**2)
                 open(constraints_txt, 'w').close()
                 open(students_txt, 'w').close()
