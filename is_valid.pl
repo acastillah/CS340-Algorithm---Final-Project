@@ -53,7 +53,7 @@ while (<SCHED>) {
 			exit 1;
 		}
 	} else {
-		if (!/^(\d+)\t(.+)\t(\d+)\t(\d+)\t(.*)$/) {
+		if (!/^(\d+\.?\d*)\t(.+)\t(\d+)\t(\d+)\t(.*)$/) {
 			print "Content line has incorrect format.\n";
 			print "Line:$_\n";
 			exit 1;

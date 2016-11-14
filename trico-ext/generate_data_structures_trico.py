@@ -1,6 +1,7 @@
 from collections import namedtuple
-import random
 PopularClass = namedtuple('PopularClass', 'id students size')
+Room = namedtuple('Room', 'id size building')
+
 
 # returns a dictionary {Class: { set of students that want to take Class }}
 def get_possible_students(student_preference_list):
@@ -36,6 +37,8 @@ def get_popular_classes(student_preference_list):
     popular_classes = sorted(popular_classes, key=lambda x: x[2], reverse=True)
     return popular_classes
 
+
+
 # returns a list of tuples (room, room_size) sorted in descending order
 def get_rooms(constraints):
     list_of_rooms = []
@@ -58,19 +61,21 @@ def get_rooms(constraints):
 def get_classroom_sizes(constraints):
     return dict(get_rooms(constraints))
 
-
 # returns a dictionary {Class:Teacher}
 def init_class_teacher(constraints):
+    begin_point = 0
+    end_point = 0
     for line in constraints:
         if line[0] == 'Teachers':
-            breakpoint = constraints.index(line) # This is the part of text that marks the beginning of the list of teahers and classes they teach
-            break
-    classes_teachers = constraints[breakpoint+1:] # List of list(class, teacher_id)
+            begin_point = constraints.index(line) # This is the part of text that marks the beginning of the list of teachers and classes they teach
+        elif line[0] == 'Buildings':
+            end_point = constraints.index(line)
+    classes_teachers = constraints[begin_point:end_point] # List of list(class, teacher_id)
     return dict(classes_teachers)
 
-#returns a set of timeslots
+# returns a set of timeslots
 def get_timeslots(constraints):
-    return set([x for x in range(1, int(constraints[0][1])+1)])
+    return set([x for x in range(1, int(constraints[0][2])+1)])
 
 # return a dictionary {timeslot: list of classrooms}
 def get_possible_classrooms(constraints):
@@ -80,21 +85,23 @@ def get_possible_classrooms(constraints):
         possible_classrooms[timeslot] = get_rooms(constraints)
     return possible_classrooms
 
-# Initially, there are no students assigned to any timeslot.
-# Returns a dictionary { Timeslot: [list of students assigned to timeslot] }
-# def init_students_in_timeslot(constraints):
-#     timeslots = get_timeslots(constraints)
-#     students_in_timeslot = {}
-#     for timeslot in timeslots:
-#         students_in_timeslot[timeslot] = [] # empty list of students
-#     return students_in_timeslot
 
-def get_school(constraints, student_preference_list):
-    school_of_course = {}
-    courses = get_popular_classes(student_preference_list)
-    for course in courses:
-        school_of_course[course.id] = random.choice([0, 1])
-    return school_of_course
+# returns a dict { class_id:school}
+def generate_class_school(constraints):
+    result = {}
+    for line in constraints:
+        if line[0] == 'Classes':
+            number_of_classes = line[1]
+            begin_point = constraints.index(line) + 1 # This is the part of text that marks the beginning of the list of classes
+        elif line[0] == 'Teachers':
+            end_point = constraints.index(line)
+
+    for course in constraints[begin_point:end_point]:
+    	# course[0] = class_id
+    	# course[1] = school_id
+		result[course[0]] = course[1]
+
+    return result
 
 def generate(student_preference_list, constraints):
     ds = {}
@@ -104,5 +111,5 @@ def generate(student_preference_list, constraints):
     ds["PossibleStudents"] = get_possible_students(student_preference_list)
     ds["ClassTeacher"] = init_class_teacher(constraints)
     ds["ClassroomSize"] = get_classroom_sizes(constraints)
-    ds["SchoolOfCourse"] = get_school(constraints, student_preference_list)
+    ds["SchoolOfCourse"] = generate_class_school(constraints)
     return ds
