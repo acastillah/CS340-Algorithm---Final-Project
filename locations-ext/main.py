@@ -26,4 +26,8 @@ schedule = registrars(ADTs)                       # returns the schedule which w
 write_info(schedule, schedule_txt)
 
 
-# subprocess.call(['perl', 'cs340_project/sections-ext/is_valid.pl', constraints_txt, students_txt, schedule_txt])
+subprocess.call(['perl', 'cs340_project/sections-ext/is_valid.pl', constraints_txt, students_txt, schedule_txt])
+out = subprocess.check_output(['perl', 'cs340_project/sections-ext/is_valid.pl', constraints_txt, students_txt, schedule_txt])
+
+score = re.search('\d+', out)
+print score

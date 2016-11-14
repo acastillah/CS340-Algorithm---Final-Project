@@ -28,9 +28,9 @@ def get_optimal_ts(timeslotsTeacherFree, ds, course):
             if ds["ClassMajor"][course] in ds["BuildingMajor"][possible_classroom.building]:
                 classroom = possible_classroom
                 break
-        ds["PossibleClassrooms"][timeslot].remove(classroom)
         if classroom == None:
             continue
+        ds["PossibleClassrooms"][timeslot].remove(classroom)
         numOfAvailableStudents = len(ds["PossibleStudents"][course] - ds["StudentsInTimeslot"][timeslot])
         classroomSize = ds["ClassroomSize"][classroom.id]
         if classroomSize > numOfAvailableStudents:
@@ -53,9 +53,9 @@ def initialize_schedule(ds, func_fill_classroom):
             if ds["ClassMajor"][course.id] in ds["BuildingMajor"][possible_classroom.building]:
                 classroom = possible_classroom
                 break
-        ds["PossibleClassrooms"][timeslot].remove(classroom)
         if classroom == None:
             break
+        ds["PossibleClassrooms"][timeslot].remove(classroom)
         classroomSize = ds["ClassroomSize"][classroom.id]
         studentsInClass = []
         ds["StudentsInTimeslot"][timeslot] = set()

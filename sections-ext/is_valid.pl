@@ -1,9 +1,10 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
+no warnings;
 use strict;
 
 if (!$ARGV[0] || !$ARGV[1] || !$ARGV[2]) {
 
-	print "$0 takes a schedule and checks that it's valid based on the constraints of the problem.\n"; 
+	print "$0 takes a schedule and checks that it's valid based on the constraints of the problem.\n";
 	print "Usage:\n";
 	print "$0: <constraints file> <prefs file> <schedule file>\n";
 	exit 1;
@@ -51,18 +52,19 @@ while (<SCHED>) {
 			print "Header line has incorrect format.\n";
 			print "Line:$_\n";
 			exit 1;
-		} 
+		}
 	} else {
-		if (!/^(\d+|\d+\.1)\t(.+)\t(\d+)\t(\d+)\t(.*)$/) {
+		if (!/^((\d+)(\.1)?)\t(.+)\t(\d+)\t(\d+)\t(.*)$/) {
 			print "Content line has incorrect format.\n";
 			print "Line:$_\n";
 			exit 1;
 		} else {
-			my $course = $1;
-			my $room = $2;
-			my $teacher = $3;
-			my $time = $4;
-			my $stus = $5;
+			my $course = $2;
+            my $section = $3;
+			my $room = $4;
+			my $teacher = $5;
+			my $time = $6;
+			my $stus = $7;
 			if ($stus !~ /^(\d+ )*(\d+)?$/) {
 				print "Students have incorrect format.\n";
 				print "Students:$1\n";
@@ -72,9 +74,13 @@ while (<SCHED>) {
 				my $classsize = $#students + 1;
 
 				if (defined $courseRoom{$course}) {
-					print "Course $course defined more than once.\n";
-					print "Line:$_\n";
-					exit 1;
+                    if ($course) {
+                    }
+                    else {
+                        print "Course $course defined more than once.\n";
+                        print "Line:$_\n";
+                        exit 1;
+                    }
 				}
 
 				$courseRoom{$course} = $room;
@@ -84,9 +90,7 @@ while (<SCHED>) {
 					print "Line:$_\n";
 					exit 1;
 				}
-                if ($course =~ "/(\d+)(\.1)/") {
-                    $course = $1;
-                }
+
 				if ($origCourseTeacher{$course} != $teacher) {
 					print "Course $course does not have the correct teacher.\n";
 					print "Line:$_\n";
@@ -102,8 +106,12 @@ while (<SCHED>) {
 						exit 1;
 					}
 				}
-
-				$courseTime{$course} = $time;
+               
+                my $courze = $course; 
+                if ($section) {
+                    my $courze = $course . $section;
+                    $courseTime{$courze} = $time;
+                }
 
 				if (defined $timeRoom{$time}{$room}) {
 					print "Multiple courses scheduled for time $time and room $room\n";
@@ -113,7 +121,7 @@ while (<SCHED>) {
 					$timeRoom{$time}{$room} = $course;
 				}
 
-				$courseStudents{$course} = \@students;
+				$courseStudents{$courze} = \@students;
 
 				foreach my $stu (@students) {
 					if (defined $studentCourses{$stu}) {
@@ -125,25 +133,25 @@ while (<SCHED>) {
 							}
 						}
 
-						push @{$studentCourses{$stu}}, $course;
+						push @{$studentCourses{$stu}}, $courze;
 
 					} else {
-						my @temp = ($course);
-						$studentCourses{$stu} = \@temp; 
+						my @temp = ($courze);
+						$studentCourses{$stu} = \@temp;
 					}
 
 					if (!inArray($course, \@{$origStudentPrefs{$stu}})) {
 						print "Student $stu assigned to unrequested course $course.\n";
 						print "Line:$_\n";
 						exit 1;
-					
-					
-					} 
+
+
+					}
 				$stuprefs++;
 				}
 			}
 		}
-	
+
 	}
 
 	$lineno++;

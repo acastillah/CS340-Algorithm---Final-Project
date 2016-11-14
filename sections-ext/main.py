@@ -1,8 +1,8 @@
-
 from ..generate_data_structures import *
 from ..main import *
 from algorithm import *
 import argparse
+import re
 import os
 
 parser = argparse.ArgumentParser('Multiple sections extension')
@@ -25,4 +25,5 @@ schedule = main(ADTs)                       # returns the schedule which we will
 write_info(schedule, schedule_txt)
 
 
-# subprocess.call(['perl', 'cs340_project/sections-ext/is_valid.pl', constraints_txt, students_txt, schedule_txt])
+subprocess.call(['perl', 'cs340_project/sections-ext/is_valid.pl', constraints_txt, students_txt, schedule_txt])
+
