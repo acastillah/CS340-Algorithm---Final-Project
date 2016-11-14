@@ -2,7 +2,7 @@
 use strict;
 use POSIX;
 
-my $maxroomcapacity = 40;
+my $maxroomcapacity = 20;
 my $minroomcapacity = 10;
 
 if (!$ARGV[0] || !$ARGV[1] || !$ARGV[2] || !$ARGV[3] || !$ARGV[4] || !$ARGV[5]) {
