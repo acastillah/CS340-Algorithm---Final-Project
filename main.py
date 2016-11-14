@@ -2,7 +2,7 @@ from generate_data_structures import *
 from algorithm import *
 import subprocess
 import argparse
-
+import os
 
 # return a list of lists
 def extract_info(txt):
@@ -15,7 +15,7 @@ def extract_info(txt):
     text.close()
     return results
 
-def write_info(schedule):
+def write_info(schedule, schedule_txt):
     with open(schedule_txt, 'w') as finalized:
         finalized.write('Course\tRoom\tTeacher\tTime\tStudents\n')
         for course_info in schedule:
@@ -39,46 +39,56 @@ if __name__ == '__main__':
     if args.mode:
         print args.mode
     
-    constraints_txt = input("Enter a name for your constraints file (please add quotes '<file>'): ")
-    students_txt = input("Enter a name for your student preference file (please add quotes '<file>'): ")
-    schedule_txt = input("Enter a name for your schedule file (output) (please add quotes '<file>'): ")
+    constraints_txt = str(input("Enter a name for your constraints file (please add quotes '<file>'): "))
+    if constraints_txt == "1":
+        constraints_txt = "c.txt"
+    students_txt = str(input("Enter a name for your student preference file (please add quotes '<file>'): "))
+    if students_txt == "1":
+        students_txt = "s.txt"
+    schedule_txt = str(input("Enter a name for your schedule file (output) (please add quotes '<file>'): "))
+    if schedule_txt == "1":
+        schedule_txt = "o.txt"
     
     print 
 
-    open(constraints_txt, 'w').close()
-    open(students_txt, 'w').close()
 
     room_num = str(input("Enter the number of rooms: "))
     class_num = str(input("Enter the number of classes: "))
     times_num = str(input("Enter the number of timeslots: "))
     students_num = str(input("Enter the number of students: "))
     
+    ext_dir = args.mode+"-ext"
+    ext_randr = ext_dir+"/make_random_input.pl"
+
     if args.mode == "base": 
         subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt])
-
-    ext_dir = args.mode+"-ext/"
-    ext_randr = ext_dir+"make_random_input.pl"
-
-    elif args.mode == "seniority":
+        open(constraints_txt, 'w').close()
+        open(students_txt, 'w').close()
+    else:
+        open(ext_dir+"/"+constraints_txt, 'w').close()
+        open(ext_dir+"/"+students_txt, 'w').close()
+        os.chdir(ext_dir)
+    if args.mode == "seniority":
         majors_num = str(input("Enter the number of distinct majors: "))
-        subprocess.call(['perl', ext_randr, room_num, class_num, times_num, students_num, constraints_txt, students_txt, majors_num])
+        subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt, majors_num])
     elif args.mode == "locations":
         building_num = str(input("Enter the number of buildings: "))
-        subprocess.call(['perl', ext_randr, room_num, class_num, times_num, students_num, constraints_txt, students_txt, building_num])
+        subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt, building_num])
     elif args.mode == "sections":
-        subprocess.call(['perl', ext_randr, roon_num, class_num, times_num, students_num, constraints_txt, students_txt]) 
+        subprocess.call(['perl', 'make_random_input.pl', room_num, class_num, times_num, students_num, constraints_txt, students_txt]) 
 
 
-    if args.mode = "base":
+    if args.mode == "base":
         student_preferences = extract_info(students_txt)
         constraints = extract_info(constraints_txt)
 
         ADTs = generate(student_preferences, constraints) # this generates all data structures
         schedule = registrars(ADTs)                       # returns the schedule which we will write
 
-        write_info(schedule)
+        write_info(schedule, schedule_txt)
         subprocess.call(['perl', 'is_valid.pl', constraints_txt, students_txt, schedule_txt])
 
     else:
-        subprocess.call(['python', ext_dir+'main.py'])
+        os.chdir('../../')
+        subprocess.call(['python', '-m', ('cs340_project.'+ext_dir+'.main'), 'cs340_project/'+ext_dir+'/'+constraints_txt, 'cs340_project/'+ext_dir+'/'+students_txt, 'cs340_project/'+ext_dir+'/'+schedule_txt])
 

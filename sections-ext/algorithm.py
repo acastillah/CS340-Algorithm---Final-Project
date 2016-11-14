@@ -21,7 +21,7 @@ def overflow_fill_classroom(teacher, course, classroomSize, timeslot, ds, schedu
             schedule = section_added[1]
     return (studentsInClass, ds)
 
-def registrars(ds):
+def main(ds):
     initialize = initialize_schedule(ds, overflow_fill_classroom)
     schedule = initialize[0]
     ds = initialize[1]

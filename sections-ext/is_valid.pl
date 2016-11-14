@@ -53,7 +53,7 @@ while (<SCHED>) {
 			exit 1;
 		} 
 	} else {
-		if (!/^(\d+(.\d+)?)\t(.+)\t(\d+)\t(\d+)\t(.*)$/) {
+		if (!/^(\d+|\d+\.1)\t(.+)\t(\d+)\t(\d+)\t(.*)$/) {
 			print "Content line has incorrect format.\n";
 			print "Line:$_\n";
 			exit 1;
@@ -84,7 +84,9 @@ while (<SCHED>) {
 					print "Line:$_\n";
 					exit 1;
 				}
-
+                if ($course =~ "/(\d+)(\.1)/") {
+                    $course = $1;
+                }
 				if ($origCourseTeacher{$course} != $teacher) {
 					print "Course $course does not have the correct teacher.\n";
 					print "Line:$_\n";
