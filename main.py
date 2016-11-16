@@ -45,8 +45,20 @@ if __name__ == '__main__':
     parser.add_argument('-mode')
     
     args = parser.parse_args()
-    
-    if args.mode == "experiment":
+
+
+    if args.mode == "presentation":
+        student_preferences = extract_info("presentation16_prefs.txt")
+        constraints = extract_info("presentation16_constraints.txt")
+
+        ADTs = generate(student_preferences, constraints) # this generates all data structures
+        schedule = registrars(ADTs)                       # returns the schedule which we will write
+
+        write_info(schedule, "o.txt")
+        subprocess.call(['perl', 'is_valid.pl', "presentation16_constraints.txt", "presentation16_prefs.txt", "o.txt"])
+        print 
+ 
+    elif args.mode == "experiment":
         constraints_txt = "c.txt"
         students_txt = "s.txt"
         schedule_txt = "o.txt"
